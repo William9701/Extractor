@@ -29,7 +29,7 @@ class ExtractionService:
             try:
                 import google.generativeai as genai
                 genai.configure(api_key=settings.google_api_key)
-                self.client = genai.GenerativeModel('gemini-1.5-flash')
+                self.client = genai.GenerativeModel('gemini-2.5-flash')
                 self.provider = "gemini"
                 logger.info("Initialized Gemini AI for extraction (FREE tier)")
             except Exception as e:
