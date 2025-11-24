@@ -31,20 +31,10 @@ class PDFService:
         Returns:
             Filled PDF as bytes
         """
-        template_path = self.templates_dir / f"{form_type}.pdf"
-
-        # Check if template exists
-        if not template_path.exists():
-            logger.info(f"Template not found, generating new PDF: {form_type}")
-            return self._generate_simple_pdf(fields)
-
-        try:
-            # Try to fill existing form
-            return self._fill_existing_form(template_path, fields)
-        except Exception as e:
-            logger.error(f"Failed to fill form: {str(e)}")
-            # Fall back to generating a simple PDF
-            return self._generate_simple_pdf(fields)
+        # Always generate a new PDF with filled values
+        # In production, you would check for real form templates here
+        logger.info(f"Generating filled PDF for form_type={form_type}")
+        return self._generate_simple_pdf(fields)
 
     def _fill_existing_form(self, template_path: Path, fields: Dict[str, str]) -> bytes:
         """
