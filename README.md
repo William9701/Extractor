@@ -7,6 +7,7 @@ A production-quality Python service for AI-based document data extraction, seman
 - **Live API**: https://pii-extraction-service-ohdw.onrender.com
 - **API Documentation**: https://pii-extraction-service-ohdw.onrender.com/docs
 - **GitHub Repository**: https://github.com/William9701/Extractor
+- **Video Demo**: https://www.dropbox.com/scl/fi/xe0tjrrbngzz3skbkf9yj/1124-2.mp4?rlkey=it9lsuyp1s648y4epnqsq0doi&st=t1mo9y13&dl=0
 
 ## Features
 
