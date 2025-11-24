@@ -1,0 +1,26 @@
+services:
+  - type: web
+    name: pii-extraction-service
+    env: python
+    plan: starter
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn app.main:app --workers 2 --worker-class uvicorn.workers.UvicornWorker --bind 0.0.0.0:$PORT
+    envVars:
+      - key: OPENAI_API_KEY
+        sync: false
+      - key: SECRET_KEY
+        generateValue: true
+      - key: CONSENT_TOKEN_EXPIRE_MINUTES
+        value: 15
+      - key: NAME_SIMILARITY_THRESHOLD
+        value: 0.85
+      - key: ADDRESS_SIMILARITY_THRESHOLD
+        value: 0.80
+      - key: OVERALL_MATCH_THRESHOLD
+        value: 0.82
+      - key: LOG_LEVEL
+        value: INFO
+      - key: PYTHON_VERSION
+        value: 3.11.0
+    healthCheckPath: /health
+    autoDeploy: true
