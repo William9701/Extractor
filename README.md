@@ -2,9 +2,15 @@
 
 A production-quality Python service for AI-based document data extraction, semantic matching, and secure PII management.
 
+## 🚀 Live Deployment
+
+- **Live API**: https://pii-extraction-service-ohdw.onrender.com
+- **API Documentation**: https://pii-extraction-service-ohdw.onrender.com/docs
+- **GitHub Repository**: https://github.com/William9701/Extractor
+
 ## Features
 
-- **Document PII Extraction**: Extract structured data from documents using GPT-4 Vision
+- **Document PII Extraction**: Extract structured data from documents using Google Gemini (FREE tier)
 - **Semantic Matching**: Compare and match PII using embedding-based similarity
 - **PDF Form Autofill**: Generate pre-filled PDF forms
 - **Consent-Based Sharing**: Secure, time-limited PII access with JWT tokens
@@ -35,7 +41,7 @@ templates/         # PDF form templates
 
 ```bash
 # Clone the repository
-git clone <repository-url>
+git clone git@github.com:William9701/Extractor.git
 cd Extractor
 
 # Create virtual environment
@@ -62,7 +68,10 @@ cp .env.example .env
 Edit `.env` and add your API keys:
 
 ```env
-# Required: OpenAI API key for document extraction
+# AI Provider: Google Gemini (FREE tier - 15 requests/min)
+GOOGLE_API_KEY=your_google_api_key_here
+
+# Optional: OpenAI as fallback (paid)
 OPENAI_API_KEY=your_openai_api_key_here
 
 # Security: Change this in production!
@@ -120,7 +129,14 @@ Extract structured PII from uploaded document using AI.
 
 **Request:**
 ```bash
+# Local
 curl -X POST "http://localhost:8000/extract" \
+  -F "file=@document.pdf" \
+  -F "profile_id=user123" \
+  -F "document_type=driver_license"
+
+# Live API
+curl -X POST "https://pii-extraction-service-ohdw.onrender.com/extract" \
   -F "file=@document.pdf" \
   -F "profile_id=user123" \
   -F "document_type=driver_license"
@@ -359,7 +375,8 @@ Environment variables (see `.env.example`):
 
 | Variable | Description | Default |
 |----------|-------------|---------|
-| `OPENAI_API_KEY` | OpenAI API key for extraction | Required |
+| `GOOGLE_API_KEY` | Google Gemini API key (FREE tier) | Required |
+| `OPENAI_API_KEY` | OpenAI API key (fallback, paid) | Optional |
 | `SECRET_KEY` | JWT signing key | Must change in production |
 | `CONSENT_TOKEN_EXPIRE_MINUTES` | Token expiration time | 15 |
 | `NAME_SIMILARITY_THRESHOLD` | Name match threshold | 0.85 |
@@ -371,7 +388,7 @@ Environment variables (see `.env.example`):
 
 ## Assumptions
 
-1. **AI Provider**: Uses OpenAI GPT-4 Vision by default. Can be extended to support other providers (Claude, Gemini, etc.)
+1. **AI Provider**: Uses Google Gemini (FREE tier: 15 requests/min, 1M requests/month) by default. Falls back to OpenAI if available. Get a free API key at https://makersuite.google.com/app/apikey
 
 2. **Storage**: In-memory storage for demo purposes. In production, use:
    - PostgreSQL/MongoDB for PII data
@@ -380,7 +397,7 @@ Environment variables (see `.env.example`):
 
 3. **Document Formats**: Currently supports PDF and image files. Extraction quality depends on document clarity.
 
-4. **Embedding Model**: Uses `all-MiniLM-L6-v2` for balance of speed and accuracy. Can be swapped for larger models.
+4. **Embedding Model**: Uses lightweight character frequency + sequence matching algorithm (optimized for Render free tier 512MB RAM limit).
 
 5. **PDF Templates**: Generates simple forms if template doesn't exist. In production, use proper PDF form templates with field mappings.
 
@@ -467,11 +484,8 @@ For production deployment:
 
 ### Common Issues
 
-**Issue**: `OpenAI API key not configured`
-- **Solution**: Add `OPENAI_API_KEY` to `.env` file
-
-**Issue**: `Failed to load embedding model`
-- **Solution**: Ensure `sentence-transformers` is installed: `pip install sentence-transformers`
+**Issue**: `GOOGLE_API_KEY not configured`
+- **Solution**: Get a free API key at https://makersuite.google.com/app/apikey and add `GOOGLE_API_KEY` to `.env` file
 
 **Issue**: PDF generation fails
 - **Solution**: Check that `templates/` directory exists and is writable
